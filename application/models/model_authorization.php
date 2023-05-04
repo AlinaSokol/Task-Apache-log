@@ -20,7 +20,8 @@ class Model_Authorization extends Model {
     public function check_authorization() {
         $this->userdata = $this->select_userdata_in_DB();
         if ($this->userdata->count == 0) {
-            Route::ErrorPage404();
+            $host = $_SERVER['REQUEST_SCHEME'] . '://' .$_SERVER['HTTP_HOST'].'/';
+            header('Location:'.$host.'apache_log');
         } else {
             return true;
         }
