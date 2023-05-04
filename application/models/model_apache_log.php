@@ -1,23 +1,17 @@
 <?php
 require_once 'model_authorization.php';
 class Model_Apache_log extends Model_Authorization {
-    const FILENAME = "D:\OSPanel\userdata\logs\Apache_2.4-PHP_7.2-7.4_errora.log";
     const TABLE_HEAD = ['date', 'ssl', 'pid', 'error'];
     private $list;
 
     public function get_data_from_logfile() {
-        $this->transform_data_from_logfile();
-        return json_encode($this->list);
-    }
-    private function open_file () {
-        $fd = fopen (self::FILENAME, 'r');
+        $filename = $_SERVER['DOCUMENT_ROOT'] . "/Apache_2.4-PHP_7.2-7.4_errora.log";
+        $fd = fopen ($filename, 'r');
         while (!feof($fd)) {
             $this->list[] = fgets($fd);
         }
         fclose($fd);
-    }
-    private function transform_data_from_logfile() {
-        $this->open_file();
+
         for ($i = 0; $i < count($this->list); $i++) {
             $this->list[$i] = explode('] [', $this->list[$i]);
             for ($j = 0; $j < count($this->list[$i]); $j++) {
@@ -35,6 +29,6 @@ class Model_Apache_log extends Model_Authorization {
                 unset($this->list[$i][$j]);
             }
         }
-        return $this->list;
+        return json_encode($this->list);
     }
 }

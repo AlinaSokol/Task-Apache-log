@@ -11,7 +11,8 @@ class Controller_Apache_log extends Controller
             $message = $this->model->get_data_from_logfile();
             $this->view->generate('apache_log_view.php', 'template_view.php', $message);
         } else {
-            Route::ErrorPage404();
+            $host = $_SERVER['REQUEST_SCHEME'] . '://' .$_SERVER['HTTP_HOST'].'/';
+            header('Location:'.$host.'404');
         }
     }
 }
