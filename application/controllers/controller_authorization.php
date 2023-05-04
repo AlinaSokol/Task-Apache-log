@@ -8,9 +8,9 @@ class Controller_Authorization extends Controller {
     public function action_index() {
         if (empty($_POST)) {
             $message = 'Enter your login and password:';
-        } elseif (empty($_POST['login']) or empty($_POST['password'])) {
-            $message = 'Enter your login/password/email';
-        }else {
+        } elseif (empty($_POST['login']) || empty($_POST['password'])) {
+            $message = 'Enter your login/password';
+        } else {
             $values = $this->model->search_user_in_DB();
             if (empty($values)) {
                 $message = 'Invalid login or password';
