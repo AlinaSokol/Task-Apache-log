@@ -22,10 +22,13 @@ class Model_Apache_log extends Model_Authorization {
                     if (self::TABLE_HEAD[$key] === 'date') {
                         $this->output_list[$index][$key] = trim($item, '[');
                         //$this->list[$i][self::TABLE_HEAD[$j]] = trim($this->list[$i][$j], '[');
-                    } elseif (self::TABLE_HEAD[$key] === 'server') {
-                        $pid = explode('] ', $item);
-                        $this->output_list[$index][$key] = $pid[0];
-                        $this->output_list[$index][$key] = $pid[1];
+                    } elseif (strpos($item, '] ') !== false) {
+                        $param = explode('] ', $item);
+                        $this->output_list[$index][$key] = $param[0];
+                        if (self::TABLE_HEAD[$key] != 'server') {
+                            $this->output_list[$index]['server'] = '';
+                        }
+                        $this->output_list[$index]['error'] = $param[1];
                     } else {
                         //$this->list[$i][self::TABLE_HEAD[$j]] = $this->list[$i][$j];
                         $this->output_list[$index][$key] = $item;

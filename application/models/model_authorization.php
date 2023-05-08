@@ -3,7 +3,6 @@ class Model_Authorization extends Model {
     protected $conn;
     protected $data;
     protected $user;
-    protected $userdata;
 
     public function __construct($arrayPost = null) {
         $connection = new Connection();
@@ -18,10 +17,9 @@ class Model_Authorization extends Model {
         return $query_stmt->fetch(PDO::FETCH_OBJ);
     }
     public function check_authorization() {
-        $this->userdata = $this->select_userdata_in_DB();
-        if ($this->userdata->count == 0) {
-            $host = $_SERVER['REQUEST_SCHEME'] . '://' .$_SERVER['HTTP_HOST'].'/';
-            header('Location:'.$host.'apache_log');
+        $userdata = $this->select_userdata_in_DB();
+        if ($userdata->count == 0) {
+            return false;
         } else {
             return true;
         }
