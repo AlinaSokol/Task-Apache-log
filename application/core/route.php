@@ -9,7 +9,9 @@ class Route
 		if ( !empty($routes[1]) )
 		{	
 			$controller_name = $routes[1];
-		}
+		} else {
+            $controller_name = 'authorization';
+        }
 
 		if ( !empty($routes[2]) )
 		{
