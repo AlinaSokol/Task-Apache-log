@@ -7,9 +7,10 @@
                 <table class="table table-hover table-striped">
                     <thead class="table-primary">
                         <th class="col-3" scope="col">date</th>
-                        <th class="col-2" scope="col">pid</th>
+                        <th class="col-1" scope="col">php7</th>
+                        <th class="col-1" scope="col">pid</th>
                         <th class="col-2" scope="col">server</th>
-                        <th scope="col-5" scope="col">error</th>
+                        <th class="col-5" scope="col" scope="col">error</th>
                     </thead>
                     <tr  scope="row" v-for="item in array" >
                         <td v-for="one in item">{{ one }}</td>

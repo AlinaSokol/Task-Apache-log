@@ -3,6 +3,7 @@ require_once 'model_authorization.php';
 class Model_Apache_log extends Model_Authorization {
     const TABLE_HEAD = ['date', 'php7', 'pid', 'server', 'error'];
     private $list;
+    private $output_list;
 
     public function get_data_from_logfile() {
         $filename = $_SERVER['DOCUMENT_ROOT'] . "/error.log (1).2";
@@ -11,29 +12,27 @@ class Model_Apache_log extends Model_Authorization {
             $this->list[] = fgets($fd);
         }
         fclose($fd);
-
-        for ($i = 0; $i < count($this->list); $i++) {
-            $this->list[$i] = explode('] [', $this->list[$i]);
-            if (strpos($this->list[$i][0], 'PHP Warning:')) {
-                unset($this->list[$i]);
-            } elseif ($this->list[$i][1] !== 'php7:error') {
-                unset($this->list[$i]);
+        foreach ($this->list as $index => $row) {
+            if (strpos($row, 'PHP Warning') !== false) {
+                continue;
+                //$this->output_list[] = $row;
             } else {
-                for ($j = 0; $j < count($this->list[$i]); $j++) {
-                    if (self::TABLE_HEAD[$j] === 'date') {
-                        $this->list[$i][self::TABLE_HEAD[$j]] = trim($this->list[$i][$j], '[');
-                    } elseif (self::TABLE_HEAD[$j] === 'server') {
-                        $pid = explode('] ', $this->list[$i][$j]);
-                        unset($this->list[$i][$j]);
-                        $this->list[$i][self::TABLE_HEAD[$j]] = $pid[0];
-                        $this->list[$i][self::TABLE_HEAD[++$j]] = $pid[1];
+                $row = explode('] [', $this->list[$index]);
+                foreach ($row as $key => $item) {
+                    if (self::TABLE_HEAD[$key] === 'date') {
+                        $this->output_list[$index][$key] = trim($item, '[');
+                        //$this->list[$i][self::TABLE_HEAD[$j]] = trim($this->list[$i][$j], '[');
+                    } elseif (self::TABLE_HEAD[$key] === 'server') {
+                        $pid = explode('] ', $item);
+                        $this->output_list[$index][$key] = $pid[0];
+                        $this->output_list[$index][$key] = $pid[1];
                     } else {
-                        $this->list[$i][self::TABLE_HEAD[$j]] = $this->list[$i][$j];
+                        //$this->list[$i][self::TABLE_HEAD[$j]] = $this->list[$i][$j];
+                        $this->output_list[$index][$key] = $item;
                     }
-                    unset($this->list[$i][$j]);
                 }
             }
         }
-        return json_encode($this->list);
+        return json_encode($this->output_list);
     }
 }
